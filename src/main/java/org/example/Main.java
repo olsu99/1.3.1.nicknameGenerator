@@ -20,17 +20,8 @@ public class Main {
         // слово - палиндром
         new Thread(() -> {
             for (String text : texts) {
-                StringBuilder reverseTexsts = new StringBuilder();
-                for (int i = text.length() - 1; i >= 0; i--) {
-                    reverseTexsts.append(text.charAt(i));
-                }
-                if (text.equals(reverseTexsts.toString())) {
-                    if (text.length() == 3)
-                        length3.incrementAndGet();
-                    if (text.length() == 4)
-                        length4.incrementAndGet();
-                    if (text.length() == 5)
-                        length5.incrementAndGet();
+                if (isPalindrome(text)) {
+                    incrementCounter(text.length());
                 }
             }
         }).start();
@@ -38,19 +29,8 @@ public class Main {
         // слово из одной и той же буквы
         new Thread(() -> {
             for (String text : texts) {
-                boolean isEquals = true;
-                for (int i = 0; i < text.length(); i++) {
-                    if (text.charAt(i) != text.charAt(0)) {
-                        isEquals = false;
-                    }
-                }
-                if (isEquals) {
-                    if (text.length() == 3)
-                        length3.incrementAndGet();
-                    if (text.length() == 4)
-                        length4.incrementAndGet();
-                    if (text.length() == 5)
-                        length5.incrementAndGet();
+                if (isSameLetter(text)) {
+                    incrementCounter(text.length());
                 }
             }
         }).start();
@@ -58,21 +38,8 @@ public class Main {
         // буквы в слове  по возрастанию
         new Thread(() -> {
             for (String text : texts) {
-                boolean isSorted = false;
-                char[] textChars = text.toCharArray();
-                Arrays.sort(textChars);
-                String textSorted = new String(textChars);
-                if (text.equals(textSorted)) {
-                    isSorted = true;
-                }
-
-                if (isSorted) {
-                    if (text.length() == 3)
-                        length3.incrementAndGet();
-                    if (text.length() == 4)
-                        length4.incrementAndGet();
-                    if (text.length() == 5)
-                        length5.incrementAndGet();
+                if (isSorted(text)) {
+                    incrementCounter(text.length());
                 }
             }
         }).start();
@@ -90,4 +57,46 @@ public class Main {
         }
         return text.toString();
     }
+
+    // слово - палиндром
+    public static boolean isPalindrome(String text) {
+        StringBuilder reverseTexts = new StringBuilder();
+        for (int i = text.length() - 1; i >= 0; i--) {
+            reverseTexts.append(text.charAt(i));
+        }
+        if (text.equals(reverseTexts.toString())) {
+            return true;
+        }
+        return false;
+    }
+
+    // слово из одной и той же буквы
+    public static boolean isSameLetter(String text) {
+        for (int i = 1; i < text.length(); i++) {
+            if (text.charAt(i) != text.charAt(i - 1))
+                return false;
+        }
+        return true;
+    }
+
+    // буквы в слове  по возрастанию
+    public static boolean isSorted(String text) {
+        char[] textChars = text.toCharArray();
+        Arrays.sort(textChars);
+        String textSorted = new String(textChars);
+        if (text.equals(textSorted)) {
+            return true;
+        } else return false;
+    }
+
+    public static void incrementCounter(int textLength) {
+        if (textLength == 3) {
+            length3.getAndIncrement();
+        } else if (textLength == 4) {
+            length4.getAndIncrement();
+        } else {
+            length5.getAndIncrement();
+        }
+    }
 }
+
